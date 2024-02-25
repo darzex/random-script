@@ -1,6 +1,7 @@
 repeat wait() until game:IsLoaded()
 loadstring(Game:HttpGet("https://raw.githubusercontent.com/darzex/script/main/low-cpu.lua"))()
 task.wait(3)
+game:GetService("RunService"):Set3dRenderingEnabled(false)
 local vu = game:GetService("VirtualUser")
 game:GetService("Players").LocalPlayer.Idled:connect(function()
 vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
@@ -11,4 +12,43 @@ game:GetService("ReplicatedStorage"):WaitForChild("EggRemoteEvents"):WaitForChil
 while true do
     game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Click"):FireServer()
     task.wait(0.1)
+end
+-- Créer une GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 400, 0, 150) -- Taille plus grande
+Frame.Position = UDim2.new(0.5, -200, 0.5, -75) -- Centre de l'écran
+Frame.BackgroundTransparency = 1 -- Rendre la GUI transparente
+Frame.Parent = ScreenGui
+
+local ValueLabel = Instance.new("TextLabel")
+ValueLabel.Size = UDim2.new(1, 0, 1, 0)
+ValueLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+ValueLabel.BackgroundTransparency = 1 -- Rendre le texte transparent
+ValueLabel.TextColor3 = Color3.new(1, 0, 0) -- Rouge
+ValueLabel.Font = Enum.Font.SourceSansBold -- Police en gras
+ValueLabel.TextSize = 48 -- Taille de police encore plus grande
+ValueLabel.TextScaled = true -- Redimensionne le texte pour s'adapter à la taille du label
+ValueLabel.Parent = Frame
+
+-- Fonction pour mettre à jour la valeur
+local function UpdateValue()
+    local player = game.Players.LocalPlayer
+    if player and player:FindFirstChild("leaderstats") then
+        local clicks = player.leaderstats:FindFirstChild("Clicks")
+        if clicks then
+            ValueLabel.Text = "Clicks: " .. tostring(clicks.Value)
+        else
+            ValueLabel.Text = "Clicks: N/A"
+        end
+    else
+        ValueLabel.Text = "Clicks: N/A"
+    end
+end
+
+-- Mettre à jour la valeur toutes les secondes
+while wait(1) do
+    UpdateValue()
 end
