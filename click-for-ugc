@@ -9,10 +9,6 @@ wait(1)
 vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
 end)
 game:GetService("ReplicatedStorage"):WaitForChild("EggRemoteEvents"):WaitForChild("EquipBest"):FireServer()
-while true do
-    game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Click"):FireServer()
-    task.wait(0.1)
-end
 -- Créer une GUI
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -48,7 +44,15 @@ local function UpdateValue()
     end
 end
 
--- Mettre à jour la valeur toutes les secondes
-while wait(1) do
+task.spawn(function()
+    while wait(1) do
     UpdateValue()
 end
+end)
+
+task.spawn(function()
+    while true do
+        game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Click"):FireServer()
+        task.wait(0.1)
+    end
+end)
